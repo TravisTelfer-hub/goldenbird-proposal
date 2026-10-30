@@ -1,0 +1,116 @@
+<!doctype html>
+<html class="staticrypt-html">
+  <head>
+    <meta charset="utf-8" />
+    <title>Webprofits</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      :root {
+        --black: #070808; --red: #f54949; --red-hover: #070808;
+        --bg: #fbf8f5; --text: #070808; --text-muted: #6d6e71;
+        --border: #e0dedc; --grey-light: #f4f4f4;
+        --font: "DM Sans", sans-serif;
+      }
+      html, body { height: 100%; }
+      body { background-color: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+      .staticrypt-spinner-container { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--bg); z-index: 10; }
+      .staticrypt-spinner { width: 2rem; height: 2rem; border: 3px solid var(--border); border-right-color: var(--red); border-radius: 50%; animation: spin 0.75s linear infinite; }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+      .staticrypt-content { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 24px; gap: 40px; }
+      .logo { display: flex; flex-direction: column; align-items: center; gap: 10px; user-select: none; }
+      .logo-svg { height: 28px; width: auto; display: block; }
+      .logo-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+      .card { width: 100%; max-width: 420px; background: #ffffff; border: 1px solid var(--border); border-radius: 4px; padding: 40px; display: flex; flex-direction: column; gap: 28px; }
+      .card-header { text-align: center; display: flex; flex-direction: column; gap: 8px; }
+      .card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
+      .card-subtitle { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+      #staticrypt-form { display: flex; flex-direction: column; gap: 16px; }
+      .staticrypt-password-container { position: relative; }
+      #staticrypt-password { width: 100%; background: var(--grey-light); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--font); font-size: 15px; padding: 13px 44px 13px 16px; outline: none; transition: border-color 0.15s; -webkit-appearance: none; }
+      #staticrypt-password::placeholder { color: var(--text-muted); opacity: 0.7; }
+      #staticrypt-password:focus { border-color: var(--black); background: #ffffff; }
+      .staticrypt-toggle-password-visibility { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; opacity: 0.35; cursor: pointer; transition: opacity 0.15s; filter: invert(1); }
+      .staticrypt-toggle-password-visibility:hover { opacity: 0.7; }
+      .staticrypt-decrypt-button { width: 100%; background: var(--red); color: #ffffff; font-family: var(--font); font-size: 14px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: none; border-radius: 40px; padding: 15px 24px; cursor: pointer; transition: background 0.15s; -webkit-appearance: none; }
+      .staticrypt-decrypt-button:hover { background: var(--red-hover); }
+      .staticrypt-decrypt-button:active { transform: scale(0.99); }
+      label.staticrypt-remember { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+      .staticrypt-remember input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid var(--border); border-radius: 2px; background: transparent; cursor: pointer; position: relative; flex-shrink: 0; transition: border-color 0.15s, background 0.15s; }
+      .staticrypt-remember input[type="checkbox"]:checked { background: var(--red); border-color: var(--red); }
+      .staticrypt-remember input[type="checkbox"]:checked::after { content: ""; position: absolute; top: 1px; left: 4px; width: 4px; height: 7px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg); }
+      .remember-label { font-size: 12px; color: var(--text-muted); letter-spacing: 0.03em; }
+      .footer { font-size: 11px; color: var(--text-muted); opacity: 0.6; letter-spacing: 0.08em; text-transform: uppercase; }
+      .hidden { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <div id="staticrypt_loading" class="staticrypt-spinner-container">
+      <div class="staticrypt-spinner"></div>
+    </div>
+    <div id="staticrypt_content" class="staticrypt-content hidden">
+      <div class="logo">
+        <svg class="logo-svg" viewBox="0 0 110.72 23.37" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Webprofits"><g><path fill="#070909" d="M28.4,7.47c-1.32,0-2.19,1.28-2.47,2.76l3.28-.09c1.17,0,1.36-.24,1.36-.61.04-1.1-.83-2.03-1.93-2.07-.08,0-.16,0-.24,0M32.3,10.89h-6.47c0,.43-.07.88-.07,1.33,0,2.64,1.37,3.93,3.47,3.93,1.21-.05,2.33-.63,3.07-1.58.07-.11.35.08.35.41,0,.07-.03.13-.07.18-.9,1.46-2.47,2.38-4.18,2.46-2.84-.08-5.08-2.45-5-5.29,0-.03,0-.06,0-.09,0-2.85,1.91-5.52,5-5.52,2.24-.08,4.14,1.62,4.32,3.85,0,.21-.17.32-.42.32"/><path fill="#070909" d="M39.45,7.59c-1.16,0-2.43,1.09-2.43,1.89v5.45c0,.87,1.7,1.91,2.71,1.91,2.22,0,3-2.38,3-4.62,0-2.69-1.06-4.63-3.28-4.63M40.02,17.59c-2,0-2.2-.8-3.45-.8-.51-.02-.98.28-1.18.75,0,.09-.16.14-.28.14s-.31-.07-.31-.19c0-.49.1-1.41.1-2.38V3.63c0-1.25-.19-1.51-1.3-1.63-.12,0-.19-.12-.19-.28s.07-.33.19-.33c1.07-.21,2.08-.62,3-1.2.07-.12.19-.19.33-.19.19,0,.33.07.33.19-.07,1-.19,2.9-.19,4.12v3.54c.73-.7,1.7-1.1,2.71-1.11,2.79-.18,5.2,1.93,5.38,4.72.01.22.01.44,0,.66,0,2.88-2.38,5.5-5.09,5.5"/><path fill="#070909" d="M52.41,8.04c-.94.03-1.82.5-2.36,1.27v5.78c0,1.07,1.11,1.77,2.31,1.77,2.36,0,3.3-2,3.3-4.64s-1.18-4.18-3.25-4.18M52.41,17.62c-.83.03-1.66-.16-2.4-.54v3.63c0,1.51.23,1.84,1.6,2,.1,0,.19.14.19.33s-.09.33-.19.33c-1,0-1.53-.14-2.64-.14s-1.68.14-2.67.14c-.09,0-.18-.16-.18-.33s.09-.33.18-.33c1.37-.16,1.61-.49,1.61-2v-10.46c0-1.25-.19-1.51-1.32-1.63-.1,0-.19-.14-.19-.31s.09-.28.19-.28c1.02-.21,1.99-.63,2.85-1.23.1,0,.17-.18.33-.18s.33.09.33.18l-.09,1.49c.79-.86,1.85-1.42,3-1.58,3.37,0,5,2.5,5,5.52.05,2.93-2.28,5.34-5.21,5.39-.13,0-.25,0-.38,0"/><path fill="#070909" d="M66.78,9.03c-1,0-1.06-.61-1.72-.61-.64.04-1.22.37-1.59.89v5.31c0,1.51.5,1.82,1.87,2,.12,0,.19.14.19.33s-.07.33-.19.33c-1,0-1.79-.14-2.93-.14s-1.67.14-2.66.14c-.1,0-.19-.14-.19-.33-.02-.14.06-.28.19-.33,1.39-.16,1.6-.47,1.6-2v-4.37c0-1.25-.19-1.51-1.32-1.63-.09,0-.19-.14-.19-.31s.1-.28.19-.28c1.03-.22,2.01-.63,2.88-1.23.07,0,.14-.18.33-.18s.33.09.33.18l-.1,1.49c.76-.89,1.83-1.46,3-1.58.69-.03,1.27.49,1.32,1.18.03.59-.41,1.09-1,1.13"/><path fill="#070909" d="M74.1,7.48c-2.1,0-3.1,2.12-3.1,4.77s1,4.64,3.12,4.64,3.11-2,3.11-4.64-1-4.74-3.11-4.74M74.12,17.65c-2.89.16-5.36-2.06-5.52-4.95,0-.15,0-.3,0-.45,0-3.04,2.46-5.5,5.5-5.5s5.5,2.46,5.5,5.5c.09,2.88-2.17,5.29-5.05,5.38-.15,0-.29,0-.44,0"/><path fill="#070909" d="M93.28,17.25c-1,0-1.51-.14-2.64-.14s-1.56.14-2.55.14c-.12,0-.19-.14-.19-.33s.07-.33.19-.33c1.37-.16,1.48-.47,1.48-2v-4.34c0-1.28-.18-1.51-1.29-1.63-.12,0-.19-.14-.19-.31s.07-.28.19-.28c1.07-.21,2.09-.63,3-1.23.07,0,.14-.18.33-.18s.33.09.33.18c-.1,1-.19,2.88-.19,4.11v3.68c0,1.53.21,1.84,1.58,2,.12,0,.19.14.19.33s-.07.33-.19.33M90.52,2.63c-1.06,0-1-1.11-2.92-1.11s-2.76,1.08-2.76,3.54v9.53c0,1.53.11,1.84,1.51,2,.09,0,.16.14.16.33s-.07.33-.16.33c-1,0-1.44-.14-2.58-.14s-1.65.14-2.64.14c-.12,0-.18-.14-.18-.33s.06-.33.18-.33c1.37-.16,1.58-.47,1.58-2v-5.61c0-.19-.09-.33-.28-.33h-1.2c-.14,0-.24-.18-.24-.3,0-.15.07-.29.21-.36.62-.16,1.51-.37,1.51-.66,0-3.25,2.43-7.22,6.33-7.22,1.34,0,2.64.81,2.64,1.59,0,.63-.4.94-1.16.94"/><path fill="#070909" d="M101.64,8.51l-3.52-.09v5.66c0,1.49.47,2.22,1.58,2.22.61.02,1.22-.13,1.75-.45.12-.07.28.16.28.38,0,.1-.05.19-.12.25-.75.67-1.73,1.03-2.73,1-1.54.09-2.87-1.09-2.96-2.63,0-.15,0-.31.01-.46v-5.73c.02-.16-.1-.31-.27-.33,0,0-.01,0-.02,0h-.9c-.15-.02-.27-.15-.25-.31,0,0,0,0,0,0,0-.14.09-.27.21-.35,1.13-.7,2.1-1.64,2.85-2.74.07-.11.2-.18.33-.18.17,0,.33.09.33.18l-.04,2.32h3.47c.19,0,.3.28.3.64s-.11.63-.3.63"/><path fill="#070909" d="M106.9,17.62c-1,0-2.24-.43-3-.43-.09-.82-.31-1.88-.42-2.5,0-.09.16-.19.33-.19.14-.02.27.06.33.19.4,1.2,1.47,2.05,2.73,2.17.93.1,1.76-.56,1.87-1.49.01-.12.01-.23,0-.35,0-2.31-5.1-1.81-5.1-5.28,0-1.7,1.73-3,3.61-3,1,0,2,.33,2.52.33,0,.83.08,1.65.15,2.36,0,.09-.15.19-.33.19s-.31-.07-.33-.19c-.03-1.04-.86-1.87-1.89-1.93-1.28,0-1.84.58-1.84,1.6,0,2.19,5.19,2.29,5.19,5.14-.12,2-1.84,3.52-3.84,3.4,0,0-.02,0-.03,0"/><path fill="#070909" d="M17.07,17.35c.03.09.06.17.11.25h.49c.18,0,.26-.08.35-.28h0l3.85-8.4c.25-.75.81-1.36,1.54-1.67v-.3c0-.15-.08-.26-.16-.26-.69,0-1.11.12-1.57.12-.8,0-1-.12-1.82-.12-.08,0-.15.11-.16.26h0v.3c.39.08.77.24.77.83-.03.53-.15,1.06-.36,1.55l-1.91,4.4h-.05l-2.4-7.19h-.69l-2.53,7h-.05l-1.73-4.59c-.18-.4-.29-.82-.33-1.26,0-.39.31-.7.7-.7.01,0,.03,0,.04,0v-.29h0c0-.15,0-.27-.15-.27-.8,0-1.14.12-2,.12-.59,0-.94,0-1.33-.08-1.37-.95-3.02-1.4-4.68-1.3C1.38,5.63-.09,6.75,0,7.69c.08.76.6,1.09,1.51,1,1.28-.13,1.12-1.46,3.39-1.68.62-.08,1.25,0,1.83.26.7.39,1.22,1.04,1.44,1.81l3.38,8.27h0c.09.2.17.28.35.28h.5c.04-.08.08-.16.11-.25l2.29-6.67h.05l2.22,6.64Z"/></g></svg>
+        <div class="logo-tag">Restricted Content</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-label">Access Required</div>
+          <p class="card-subtitle">Enter the password provided by your Webprofits contact to view this content.</p>
+        </div>
+        <form id="staticrypt-form" action="#" method="post">
+          <div class="staticrypt-password-container">
+            <input id="staticrypt-password" type="password" name="password" placeholder="Enter password" autofocus />
+            <img class="staticrypt-toggle-password-visibility" alt="Show password" title="Show password" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTM4LjggNS4xQzI4LjQtMy4xIDEzLjMtMS4yIDUuMSA5LjJTLTEuMiAzNC43IDkuMiA0Mi45bDU5MiA0NjRjMTAuNCA4LjIgMjUuNSA2LjMgMzMuNy00LjFzNi4zLTI1LjUtNC4xLTMzLjdMNTI1LjYgMzg2LjdjMzkuNi00MC42IDY2LjQtODYuMSA3OS45LTExOC40YzMuMy03LjkgMy4zLTE2LjcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4xQzQ2NS41IDY4LjggNDAwLjggMzIgMzIwIDMyYy02OC4yIDAtMTI1IDI2LjMtMTY5LjMgNjAuOEwzOC44IDUuMXpNMjIzLjEgMTQ5LjVDMjQ4LjYgMTI2LjIgMjgyLjcgMTEyIDMyMCAxMTJjNzkuNSAwIDE0NCA2NC41IDE0NCAxNDRjMCAyNC45LTYuMyA0OC4zLTE3LjQgNjguN0w0MDggMjk0LjVjOC40LTE5LjMgMTAuNi00MS40IDQuOC02My4zYy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM2MwIDEwLjItMi40IDE5LjgtNi42IDI4LjNsLTkwLjMtNzAuOHpNMzczIDM4OS45Yy0xNi40IDYuNS0zNC4zIDEwLjEtNTMgMTAuMWMtNzkuNSAwLTE0NC02NC41LTE0NC0xNDRjMC02LjkgLjUtMTMuNiAxLjQtMjAuMkw4My4xIDE2MS41QzYwLjMgMTkxLjIgNDQgMjIwLjggMzQuNSAyNDMuN2MtMy4zIDcuOS0zLjMgMTYuNyAwIDI0LjZjMTQuOSAzNS43IDQ2LjIgODcuNyA5MyAxMzEuMUMxNzQuNSA0NDMuMiAyMzkuMiA0ODAgMzIwIDQ4MGM0Ny44IDAgODkuOS0xMi45IDEyNi4yLTMyLjVMMzczIDM4OS45eiIvPjwvc3ZnPg==" />
+          </div>
+          <label id="staticrypt-remember-label" class="staticrypt-remember hidden">
+            <input id="staticrypt-remember" type="checkbox" name="remember" />
+            <span class="remember-label">Keep me signed in</span>
+          </label>
+          <input type="submit" class="staticrypt-decrypt-button" value="Unlock" />
+        </form>
+      </div>
+      <div class="footer">Webprofits - Confidential</div>
+    </div>
+    <script>
+      const staticryptInitiator = /*[|js_staticrypt|]*/ 0;
+      const templateError = "Wrong password.",
+        templateToggleAltShow = "Show password",
+        templateToggleAltHide = "Hide password",
+        isRememberEnabled = /*[|is_remember_enabled|]*/ 0,
+        staticryptConfig = /*[|staticrypt_config|]*/ 0;
+      const templateConfig = { rememberExpirationKey: "staticrypt_expiration", rememberPassphraseKey: "staticrypt_passphrase", replaceHtmlCallback: null, clearLocalStorageCallback: null };
+      const staticrypt = staticryptInitiator.init(staticryptConfig, templateConfig);
+      window.onload = async function () {
+        const { isSuccessful } = await staticrypt.handleDecryptOnLoad();
+        if (!isSuccessful) {
+          document.getElementById("staticrypt_loading").classList.add("hidden");
+          document.getElementById("staticrypt_content").classList.remove("hidden");
+          document.getElementById("staticrypt-password").focus();
+          if (isRememberEnabled) { document.getElementById("staticrypt-remember-label").classList.remove("hidden"); }
+        }
+      };
+      const toggleIcon = document.querySelector(".staticrypt-toggle-password-visibility");
+      const imgSrcEyeClosed = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTM4LjggNS4xQzI4LjQtMy4xIDEzLjMtMS4yIDUuMSA5LjJTLTEuMiAzNC43IDkuMiA0Mi45bDU5MiA0NjRjMTAuNCA4LjIgMjUuNSA2LjMgMzMuNy00LjFzNi4zLTI1LjUtNC4xLTMzLjdMNTI1LjYgMzg2LjdjMzkuNi00MC42IDY2LjQtODYuMSA3OS45LTExOC40YzMuMy03LjkgMy4zLTE2LjcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4xQzQ2NS41IDY4LjggNDAwLjggMzIgMzIwIDMyYy02OC4yIDAtMTI1IDI2LjMtMTY5LjMgNjAuOEwzOC44IDUuMXpNMjIzLjEgMTQ5LjVDMjQ4LjYgMTI2LjIgMjgyLjcgMTEyIDMyMCAxMTJjNzkuNSAwIDE0NCA2NC41IDE0NCAxNDRjMCAyNC45LTYuMyA0OC4zLTE3LjQgNjguN0w0MDggMjk0LjVjOC40LTE5LjMgMTAuNi00MS40IDQuOC02My4zYy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM2MwIDEwLjItMi40IDE5LjgtNi42IDI4LjNsLTkwLjMtNzAuOHpNMzczIDM4OS45Yy0xNi40IDYuNS0zNC4zIDEwLjEtNTMgMTAuMWMtNzkuNSAwLTE0NC02NC41LTE0NC0xNDRjMC02LjkgLjUtMTMuNiAxLjQtMjAuMkw4My4xIDE2MS41QzYwLjMgMTkxLjIgNDQgMjIwLjggMzQuNSAyNDMuN2MtMy4zIDcuOS0zLjMgMTYuNyAwIDI0LjZjMTQuOSAzNS43IDQ2LjIgODcuNyA5MyAxMzEuMUMxNzQuNSA0NDMuMiAyMzkuMiA0ODAgMzIwIDQ4MGM0Ny44IDAgODkuOS0xMi45IDEyNi4yLTMyLjVMMzczIDM4OS45eiIvPjwvc3ZnPg==";
+      const imgSrcEyeOpened = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTI4OCAzMmMtODAuOCAwLTE0NS41IDM2LjgtMTkyLjYgODAuNkM0OC42IDE1NiAxNy4zIDIwOCAyLjUgMjQzLjdjLTMuMyA3LjktMy4zIDE2LjcgMCAyNC42QzE3LjMgMzA0IDQ4LjYgMzU2IDk1LjQgMzk5LjRDMTQyLjUgNDQzLjIgMjA3LjIgNDgwIDI4OCA0ODBzMTQ1LjUtMzYuOCAxOTIuNi04MC42YzQ2LjgtNDMuNSA3OC4xLTk1LjQgOTMtMTMxLjFjMy4zLTcuOSAzLjMtMTYuNyAwLTI0LjZjLTE0LjktMzUuNy00Ni4yLTg3LjctOTMtMTMxLjFDNDMzLjUgNjguOCAzNjguOCAzMiAyODggMzJ6TTE0NCAyNTZhMTQ0IDE0NCAwIDEgMSAyODggMCAxNDQgMTQ0IDAgMSAxIC0yODggMHptMTQ0LTY0YzAgMzUuMy0yOC43IDY0LTY0IDY0Yy03LjEgMC0xMy45LTEuMi0yMC4zLTMuM2MtNS41LTEuOC0xMS45IDEuNi0xMS43IDcuNGMuMyA2LjkgMS4zIDEzLjggMy4yIDIwLjdjMTMuNyA1MS4yIDY2LjQgODEuNiAxMTcuNiA2Ny45czgxLjYtNjYuNCA2Ny45LTExNy42Yy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM3oiLz48L3N2Zz4=";
+      toggleIcon.addEventListener("click", function () {
+        const passwordInput = document.getElementById("staticrypt-password");
+        if (passwordInput.type === "password") { passwordInput.type = "text"; toggleIcon.src = imgSrcEyeOpened; toggleIcon.alt = templateToggleAltHide; toggleIcon.title = templateToggleAltHide; }
+        else { passwordInput.type = "password"; toggleIcon.src = imgSrcEyeClosed; toggleIcon.alt = templateToggleAltShow; toggleIcon.title = templateToggleAltShow; }
+      });
+      document.getElementById("staticrypt-form").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const password = document.getElementById("staticrypt-password").value,
+          isRememberChecked = document.getElementById("staticrypt-remember").checked;
+        const { isSuccessful } = await staticrypt.handleDecryptionOfPage(password, isRememberChecked);
+        if (!isSuccessful) { alert(templateError); }
+      });
+    </script>
+  </body>
+</html>

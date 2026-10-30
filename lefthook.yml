@@ -1,0 +1,29 @@
+# Git hooks managed by lefthook. Install: brew install lefthook && lefthook install
+# Serial, in priority order: block tracked source -> encrypt -> validate the STAGED tree (what the commit will
+# publish), not the working tree. CI (.github/workflows/security-baseline.yml) runs the same guard on the pushed
+# tree, so --no-verify here only moves the failure to the pull request.
+# The staged-tree check re-renders every page with staticrypt@3.5.4 (node + `npm i -g staticrypt@3.5.4`); when the
+# pinned library is absent the guard fails closed with that message - install it, never skip the hook.
+pre-commit:
+  parallel: false
+  commands:
+    block-public-encrypted:
+      priority: 1
+      run: |
+        if git diff --cached --name-only -z --diff-filter=AMR | tr '\0' '\n' | grep -q '^public-encrypted/'; then
+          echo "BLOCKED: public-encrypted/ is StatiCrypt source. It stays in your local clone - commit only the encrypted output."; exit 1
+        fi
+    encrypt-public:
+      priority: 2
+      run: |
+        set -e
+        python3 scripts/encrypt/encrypt_public.py --skip-unchanged
+        git add -A -- public scripts/encrypt/encrypt-manifest.json
+    check-release-staged:
+      priority: 3
+      run: |
+        set -e
+        tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
+        git checkout-index -a --prefix="$tmp/"
+        test -f "$tmp/release-manifest.json" || { echo "BLOCKED: release-manifest.json is not staged/tracked"; exit 1; }
+        python3 .github/scripts/check-release.py --root "$tmp/public" --manifest "$tmp/release-manifest.json"

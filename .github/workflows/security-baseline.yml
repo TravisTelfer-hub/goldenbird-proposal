@@ -1,0 +1,61 @@
+# security-baseline: the required check for every publishing repo (FIX-PLAN item 9).
+# The job id AND name are "security-baseline" - that exact string is the status context Alex requires on main.
+# 1. Prepare the release artefact exactly as the Pages workflow does (BUILD_RELEASE; empty when the served
+#    directory is tracked as-is), 2. install staticrypt@3.5.4 and run the release guard, which re-renders every
+#    page with that library and accepts only byte-identical output, 3. scan the tree with the pinned gitleaks CLI.
+# The Pages workflow itself must ALSO run the guard immediately before actions/upload-pages-artifact (see the
+# release-guard README): this check gates the merge, that step gates the upload.
+# Actions are pinned to commit SHAs with their exact tag; gitleaks is a release binary verified by SHA-256.
+# Bump either only through a reviewed PR.
+name: security-baseline
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-baseline-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  RELEASE_ROOT: public
+  # Command that produces RELEASE_ROOT for sites whose served directory is BUILT (root-served sites: the same
+  # rsync the Pages workflow uses). Leave empty when RELEASE_ROOT is a tracked directory.
+  BUILD_RELEASE: ""
+  GITLEAKS_VERSION: 8.30.1
+  GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+
+jobs:
+  security-baseline:
+    name: security-baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+      - name: Prepare the release artefact
+        run: |
+          set -euo pipefail
+          if [ -n "$BUILD_RELEASE" ]; then bash -euo pipefail -c "$BUILD_RELEASE"; fi
+          if [ ! -d "$RELEASE_ROOT" ]; then
+            echo "::error::release root $RELEASE_ROOT does not exist after the build step - set BUILD_RELEASE to the command the Pages workflow uses to produce it"
+            exit 1
+          fi
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+      - name: Install the pinned StatiCrypt library (the guard re-renders every page with it)
+        run: npm i -g staticrypt@3.5.4 --no-audit --no-fund
+      - name: Release root carries only approved files
+        run: python3 .github/scripts/check-release.py --root "$RELEASE_ROOT" --manifest release-manifest.json
+      - name: Fetch the pinned gitleaks release and verify its checksum
+        run: |
+          set -euo pipefail
+          curl -sSL -o gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+      - name: No secrets in the tree or its history
+        run: ./gitleaks git --no-banner --redact --exit-code 1 --log-opts="--all" .

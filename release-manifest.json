@@ -1,0 +1,21 @@
+{
+  "release_root": "public",
+  "public_plain": [
+    "index.html"
+  ],
+  "public_data": [],
+  "public_files": [
+    "proposal/assets/logos/meta.svg",
+    "proposal/assets/logos/google-ads.svg"
+  ],
+  "bundles": [],
+  "passthrough": [],
+  "never": [],
+  "approved_templates": [
+    "f47167b58a3ccc5faa3546afccf23d35cd4a603c19c2158320a58f9f205e31ff"
+  ],
+  "template_paths": [
+    "scripts/encrypt/template.html"
+  ],
+  "label_profiles": {}
+}
